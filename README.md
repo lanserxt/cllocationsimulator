@@ -1,0 +1,2 @@
+# cllocationsimulator
+iOS CLLocationManager simulator
