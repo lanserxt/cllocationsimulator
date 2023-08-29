@@ -16,7 +16,7 @@ enum CLLocationSimulatorMode {
     case emitOnTimestamp
 }
 
-final class CLLocationSimulator {
+final class CLLocationSimulator: ObservableObject {
     
     //Publishers
     
@@ -57,6 +57,12 @@ final class CLLocationSimulator {
         initialLocationEmit()
     }
     
+    init(gpsDataName: String) {
+        let locationsParser = LocationFileParser()
+        locationsLeft = locationsParser.parseJSONFromFile(named: gpsDataName) ?? []
+        initialLocationEmit()
+    }
+    
     /// Mode to emit values
     var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 1.0)
     
@@ -85,7 +91,7 @@ final class CLLocationSimulator {
     }
     
     /// Starting simulation based on mode
-    func startSimulation() {
+    func start() {
         switch simulationMode {
         case .emitEveryInterval(time: let interval):
             emitOnInterval(interval: interval)
@@ -95,8 +101,14 @@ final class CLLocationSimulator {
         }
     }
     
+    /// Pause simulation
+    func pause() {
+        emitTimer?.invalidate()
+        emitTimer = nil
+    }
+    
     /// Reseting used locations and progress
-    func resetSimulation() {
+    func reset() {
         progress.send(0.0)
         
         var restoredArray = Array(locationsUsed)
