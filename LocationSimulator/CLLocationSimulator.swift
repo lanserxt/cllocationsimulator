@@ -37,30 +37,32 @@ final class CLLocationSimulator: ObservableObject {
     /// Actual locations Publisher
     private var locations: PassthroughSubject<[CLLocation], Never> = .init()
     
-    
     /// Actual heading Publisher
     private var heading: PassthroughSubject<CLHeading, Never> = .init()
     
+    /// Actual progress Publisher
     private var progress: PassthroughSubject<Double, Never> = .init()
+    
+    @Published
+    var isActive: Bool = false
     
     //Inner variables
     private var locationsUsed: [LocationData] = []
     private var locationsLeft: [LocationData] = []
     private var lastLocation: LocationData? = nil
     
-    
     /// Base timer to send values
     private var emitTimer: Timer?
     
+    /// Constructor
+    /// - Parameter locations: lo
     init(locations: [LocationData]) {
         locationsLeft = locations
-        initialLocationEmit()
     }
     
     init(gpsDataName: String) {
         let locationsParser = LocationFileParser()
         locationsLeft = locationsParser.parseJSONFromFile(named: gpsDataName) ?? []
-        initialLocationEmit()
     }
     
     /// Mode to emit values
@@ -69,7 +71,7 @@ final class CLLocationSimulator: ObservableObject {
     //MARK: - Timer starters
     
     /// Start sending first location from list as initial coordinate
-    private func initialLocationEmit() {
+    func initialLocationEmit() {
         
         guard !self.locationsLeft.isEmpty else {return}
         
@@ -88,6 +90,7 @@ final class CLLocationSimulator: ObservableObject {
         timer.tolerance = 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
+        isActive = true
     }
     
     /// Starting simulation based on mode
@@ -105,6 +108,7 @@ final class CLLocationSimulator: ObservableObject {
     func pause() {
         emitTimer?.invalidate()
         emitTimer = nil
+        isActive = false
     }
     
     /// Reseting used locations and progress
@@ -118,6 +122,7 @@ final class CLLocationSimulator: ObservableObject {
         
         emitTimer?.invalidate()
         emitTimer = nil
+        isActive = false
     }
     
     /// Emitting locations based on interval
@@ -144,12 +149,14 @@ final class CLLocationSimulator: ObservableObject {
                 emitTimer?.invalidate()
                 emitTimer = nil
                 progress.send(1.0)
+                isActive = false
                 return
             }
         }
         timer.tolerance = interval / 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
+        isActive = true
     }
     
     /// Emit based on locations timestamps
@@ -181,12 +188,13 @@ final class CLLocationSimulator: ObservableObject {
                 emitTimer?.invalidate()
                 emitTimer = nil
                 progress.send(1.0)
+                isActive = false
                 return
             }
         }
         timer.tolerance = interval / 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
+        isActive = true
     }
-    
 }

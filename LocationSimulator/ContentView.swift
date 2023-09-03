@@ -21,9 +21,12 @@ struct ContentView: View {
     var cancellables = Set<AnyCancellable>()
     
     var body: some View {
+        let _ = Self._printChanges()
         VStack {
             Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
-            ProgressView(value: simulationProgress, total: 1.0)
+                .border(.debug, width: 2.0)
+            ProgressView(
+                value: simulationProgress, total: 1.0)
             
             Picker("What is your favorite color?", selection: $emitMode) {
                             Text("1s").tag(0)
@@ -33,18 +36,35 @@ struct ContentView: View {
                         .padding(.top, 24)
             HStack {
                 Button {
-                    locationsSimulator.start()
+                    if locationsSimulator.isActive {
+                        locationsSimulator.pause()
+                    } else {
+                        locationsSimulator.start()
+                    }
                 } label: {
-                    Text("Start")
+                    Text(locationsSimulator.isActive ? "Pause" : "Start")
                 }
                 Spacer()
                 Button {
-                    locationsSimulator.pause()
+                    locationsSimulator.reset()
                 } label: {
-                    Text("Pause")
+                    Text("Stop")
                 }
             }.padding()
             
+        }
+        .border(.debug, width: 2.0)
+        .overlay {
+            VStack {
+                HStack {
+                    
+                Spacer()
+                    Circle()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(locationsSimulator.isActive ? .green : .red)
+                }
+                Spacer()
+            }
         }
         .padding()
         .onChange(of: emitMode) { newValue in
@@ -62,6 +82,15 @@ struct ContentView: View {
     }
 }
 
+extension ShapeStyle where Self == Color {
+    static var debug: Color {
+        Color(
+            red: .random(in: 0...1),
+            green: .random(in: 0...1),
+            blue: .random(in: 0...1)
+        )
+    }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
