@@ -49,24 +49,27 @@ final class CLLocationSimulator: ObservableObject {
     //Inner variables
     private var locationsUsed: [LocationData] = []
     private var locationsLeft: [LocationData] = []
-    private var lastLocation: LocationData? = nil
     
     /// Base timer to send values
     private var emitTimer: Timer?
+    
+    private var totalLocations: Int = 0
     
     /// Constructor
     /// - Parameter locations: lo
     init(locations: [LocationData]) {
         locationsLeft = locations
+        totalLocations = locationsLeft.count
     }
     
     init(gpsDataName: String) {
         let locationsParser = LocationFileParser()
         locationsLeft = locationsParser.parseJSONFromFile(named: gpsDataName) ?? []
+        totalLocations = locationsLeft.count
     }
     
     /// Mode to emit values
-    var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 1.0)
+    var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 0.3)
     
     //MARK: - Timer starters
     
@@ -76,15 +79,14 @@ final class CLLocationSimulator: ObservableObject {
         guard !self.locationsLeft.isEmpty else {return}
         
         //First location is the starting point
-        lastLocation = locationsLeft.first
         
         emitTimer?.invalidate()
         emitTimer = nil
         
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {[weak self] timer in
             guard let self else {return}
-            if let lastLocation {
-                locations.send([lastLocation.location])
+            if let firstLocation = self.locationsLeft.first {
+                locations.send([firstLocation.location])
             }
         }
         timer.tolerance = 0.5
@@ -100,6 +102,7 @@ final class CLLocationSimulator: ObservableObject {
             emitOnInterval(interval: interval)
             break
         case .emitOnTimestamp:
+            emitOnTimestamp()
             break
         }
     }
@@ -140,11 +143,9 @@ final class CLLocationSimulator: ObservableObject {
             guard let self else {return}
             
             let newLocation = locationsLeft.removeFirst()
-            self.lastLocation = newLocation
             self.locationsUsed.append(newLocation)
             locations.send([newLocation.location])
-            progress.send(Double(locationsUsed.count) / Double(locationsLeft.count))
-            
+            progress.send(Double(locationsUsed.count) / Double(totalLocations))
             guard !self.locationsLeft.isEmpty else {
                 emitTimer?.invalidate()
                 emitTimer = nil
@@ -159,6 +160,8 @@ final class CLLocationSimulator: ObservableObject {
         isActive = true
     }
     
+    private var lastTimestamp: Double = 0.0
+    
     /// Emit based on locations timestamps
     private func emitOnTimestamp() {
         
@@ -170,19 +173,23 @@ final class CLLocationSimulator: ObservableObject {
         }
         
         //First point emit
-        var interval = 1.0
-        if lastLocation != nil {
-            interval = (locationsLeft.first?.t ?? 0.0) - (lastLocation?.t ?? 0.0)
-        }
-        
+        var interval = 0.3
+        lastTimestamp = (locationsLeft.first?.t ?? 0.0)
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) {[weak self] timer in
             guard let self else {return}
-            let newLocation = locationsLeft.removeFirst()
-            self.lastLocation = newLocation
+            
+            lastTimestamp += interval
+            
+            var newLocation = locationsLeft.first
+            
+            guard newLocation?.t ?? 0.0 < lastTimestamp, let newLocation else {
+                return
+            }
+            locationsLeft.remove(at: 0)
             self.locationsUsed.append(newLocation)
             
             locations.send([newLocation.location])
-            progress.send(Double(locationsUsed.count) / Double(locationsLeft.count))
+            progress.send(Double(locationsUsed.count) / Double(totalLocations))
             
             guard !self.locationsLeft.isEmpty else {
                 emitTimer?.invalidate()

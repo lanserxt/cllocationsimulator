@@ -21,14 +21,16 @@ struct ContentView: View {
     var cancellables = Set<AnyCancellable>()
     
     var body: some View {
-        let _ = Self._printChanges()
         VStack {
-            Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
-                .border(.debug, width: 2.0)
+            HStack {
+                Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
+                Spacer()
+            }
             ProgressView(
                 value: simulationProgress, total: 1.0)
+                
             
-            Picker("What is your favorite color?", selection: $emitMode) {
+            Picker("", selection: $emitMode) {
                             Text("1s").tag(0)
                             Text("timestamp").tag(1)
                         }
@@ -53,7 +55,7 @@ struct ContentView: View {
             }.padding()
             
         }
-        .border(.debug, width: 2.0)
+        .frame(maxHeight: .infinity)
         .overlay {
             VStack {
                 HStack {
