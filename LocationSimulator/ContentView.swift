@@ -21,65 +21,73 @@ struct ContentView: View {
     var cancellables = Set<AnyCancellable>()
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
-                Spacer()
-            }
-            ProgressView(
-                value: simulationProgress, total: 1.0)
-                
-            
-            Picker("", selection: $emitMode) {
-                            Text("1s").tag(0)
-                            Text("timestamp").tag(1)
-                        }
-                        .pickerStyle(.segmented)
-                        .padding(.top, 24)
-            HStack {
-                Button {
-                    if locationsSimulator.isActive {
-                        locationsSimulator.pause()
-                    } else {
-                        locationsSimulator.start()
-                    }
-                } label: {
-                    Text(locationsSimulator.isActive ? "Pause" : "Start")
-                }
-                Spacer()
-                Button {
-                    locationsSimulator.reset()
-                } label: {
-                    Text("Stop")
-                }
-            }.padding()
-            
-        }
-        .frame(maxHeight: .infinity)
-        .overlay {
+        NavigationView {
             VStack {
                 HStack {
-                    
-                Spacer()
-                    Circle()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(locationsSimulator.isActive ? .green : .red)
+                    Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
+                    Spacer()
                 }
-                Spacer()
+                ProgressView(
+                    value: simulationProgress, total: 1.0)
+                
+                Divider()
+                
+                Text("Simulation mode")
+                    .font(.headline)
+                    .padding(.top, 24)
+                Picker("", selection: $emitMode) {
+                    Text("1 second").tag(0)
+                    Text("on timestamp").tag(1)
+                }
+                .pickerStyle(.segmented)
+                HStack {
+                    Button {
+                        if locationsSimulator.isActive {
+                            locationsSimulator.pause()
+                        } else {
+                            locationsSimulator.start()
+                        }
+                    } label: {
+                        Text(locationsSimulator.isActive ? "Pause" : "Start")
+                    }
+                    Spacer()
+                    Button {
+                        locationsSimulator.reset()
+                    } label: {
+                        Text("Stop")
+                    }
+                }.padding()
+                    .padding(.top, 24)
+                
             }
-        }
-        .padding()
-        .onChange(of: emitMode) { newValue in
-            locationsSimulator.pause()
-            if newValue == 0 {
-                locationsSimulator.simulationMode = .emitEveryInterval(time: 1.0)
-            } else {
-                locationsSimulator.simulationMode = .emitOnTimestamp
+            .frame(maxHeight: .infinity)
+            .overlay {
+                VStack {
+                    HStack {
+                        
+                        Spacer()
+                        Text("Active")
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(locationsSimulator.isActive ? .green : .red)
+                    }
+                    Spacer()
+                }
             }
-            locationsSimulator.start()
-        }
-        .onReceive(locationsSimulator.progressPublisher) { progress in
-            simulationProgress = progress
+            .padding()
+            .onChange(of: emitMode) { newValue in
+                locationsSimulator.pause()
+                if newValue == 0 {
+                    locationsSimulator.simulationMode = .emitEveryInterval(time: 1.0)
+                } else {
+                    locationsSimulator.simulationMode = .emitOnTimestamp
+                }
+                locationsSimulator.start()
+            }
+            .onReceive(locationsSimulator.progressPublisher) { progress in
+                simulationProgress = progress
+            }
+            .navigationTitle("Combine publishers")
         }
     }
 }

@@ -25,20 +25,13 @@ final class CLLocationSimulator: ObservableObject {
         locations.share().eraseToAnyPublisher()
     }
     
-    /// Publisher for Heading updates
-    var headingPublisher: AnyPublisher<CLHeading, Never> {
-        heading.share().eraseToAnyPublisher()
-    }
-    
+    /// Publisher for Progress update
     var progressPublisher: AnyPublisher<Double, Never> {
         progress.share().eraseToAnyPublisher()
     }
     
     /// Actual locations Publisher
     private var locations: PassthroughSubject<[CLLocation], Never> = .init()
-    
-    /// Actual heading Publisher
-    private var heading: PassthroughSubject<CLHeading, Never> = .init()
     
     /// Actual progress Publisher
     private var progress: PassthroughSubject<Double, Never> = .init()
@@ -139,6 +132,7 @@ final class CLLocationSimulator: ObservableObject {
             return
         }        
         
+        //Startign the timer based on set interval
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) {[weak self] timer in
             guard let self else {return}
             
@@ -160,7 +154,11 @@ final class CLLocationSimulator: ObservableObject {
         isActive = true
     }
     
+    /// Timestamp that increases during timer ticks
     private var lastTimestamp: Double = 0.0
+    
+    /// Timer interval for timestamp emits
+    private let timestampInterval: Double = 0.3
     
     /// Emit based on locations timestamps
     private func emitOnTimestamp() {
@@ -172,16 +170,16 @@ final class CLLocationSimulator: ObservableObject {
             return
         }
         
-        //First point emit
-        var interval = 0.3
+        //First point timestamp to sum on block
         lastTimestamp = (locationsLeft.first?.t ?? 0.0)
-        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) {[weak self] timer in
+        let timer = Timer.scheduledTimer(withTimeInterval: timestampInterval, repeats: true) {[weak self] timer in
             guard let self else {return}
             
-            lastTimestamp += interval
+            //Increasing current timestamp
+            lastTimestamp += timestampInterval
             
-            var newLocation = locationsLeft.first
-            
+            let newLocation = locationsLeft.first
+            //Only locaton with timestamp that passed current timestamp
             guard newLocation?.t ?? 0.0 < lastTimestamp, let newLocation else {
                 return
             }
@@ -199,7 +197,7 @@ final class CLLocationSimulator: ObservableObject {
                 return
             }
         }
-        timer.tolerance = interval / 0.5
+        timer.tolerance = timestampInterval / 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
         isActive = true
