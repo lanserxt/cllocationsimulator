@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9051DFE62A9C6ED7004D4AB6 /* LocationSimulatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFE52A9C6ED7004D4AB6 /* LocationSimulatorApp.swift */; };
-		9051DFE82A9C6ED7004D4AB6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFE72A9C6ED7004D4AB6 /* ContentView.swift */; };
+		9051DFE82A9C6ED7004D4AB6 /* CombineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFE72A9C6ED7004D4AB6 /* CombineView.swift */; };
 		9051DFEA2A9C6ED8004D4AB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9051DFE92A9C6ED8004D4AB6 /* Assets.xcassets */; };
 		9051DFED2A9C6ED8004D4AB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9051DFEC2A9C6ED8004D4AB6 /* Preview Assets.xcassets */; };
 		9051DFF42A9C6F9E004D4AB6 /* LocationFileParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */; };
@@ -19,7 +19,7 @@
 /* Begin PBXFileReference section */
 		9051DFE22A9C6ED7004D4AB6 /* LocationSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9051DFE52A9C6ED7004D4AB6 /* LocationSimulatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSimulatorApp.swift; sourceTree = "<group>"; };
-		9051DFE72A9C6ED7004D4AB6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9051DFE72A9C6ED7004D4AB6 /* CombineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineView.swift; sourceTree = "<group>"; };
 		9051DFE92A9C6ED8004D4AB6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9051DFEC2A9C6ED8004D4AB6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFileParser.swift; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				9051DFE52A9C6ED7004D4AB6 /* LocationSimulatorApp.swift */,
-				9051DFE72A9C6ED7004D4AB6 /* ContentView.swift */,
+				9051DFE72A9C6ED7004D4AB6 /* CombineView.swift */,
 				9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */,
 				9051DFF72A9C7103004D4AB6 /* CLLocationSimulator.swift */,
 				9051DFF52A9C70BE004D4AB6 /* gps.data */,
@@ -148,7 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9051DFF82A9C7103004D4AB6 /* CLLocationSimulator.swift in Sources */,
-				9051DFE82A9C6ED7004D4AB6 /* ContentView.swift in Sources */,
+				9051DFE82A9C6ED7004D4AB6 /* CombineView.swift in Sources */,
 				9051DFE62A9C6ED7004D4AB6 /* LocationSimulatorApp.swift in Sources */,
 				9051DFF42A9C6F9E004D4AB6 /* LocationFileParser.swift in Sources */,
 			);

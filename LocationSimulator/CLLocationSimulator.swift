@@ -62,7 +62,7 @@ final class CLLocationSimulator: ObservableObject {
     }
     
     /// Mode to emit values
-    var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 0.3)
+    var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 1.0)
     
     //MARK: - Timer starters
     

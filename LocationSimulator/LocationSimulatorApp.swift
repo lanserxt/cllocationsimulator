@@ -11,7 +11,12 @@ import SwiftUI
 struct LocationSimulatorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabView {
+                CombineView()
+                    .tabItem {
+                        Label("Combine", systemImage: "location.fill")
+                    }
+            }
         }
     }
 }

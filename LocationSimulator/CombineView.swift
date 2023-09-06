@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CombineView.swift
 //  LocationSimulator
 //
 //  Created by Anton Gubarenko on 28.08.2023.
@@ -7,14 +7,18 @@
 
 import SwiftUI
 import Combine
+import CoreLocation
 
-struct ContentView: View {
+struct CombineView: View {
     
     @State
     private var emitMode = 0
     
     @State
     private var simulationProgress: Double = 0.0
+    
+    @State
+    private var locations: [CLLocation] = []
     
     @StateObject
     private var locationsSimulator: CLLocationSimulator = CLLocationSimulator(gpsDataName: "gps")
@@ -23,15 +27,35 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
+                
+                VStack {
+                    Image(systemName: "globe")
+                    .resizable()
+                        .frame(width: 32, height: 32)
+                    if locations.isEmpty {
+                        EmptyView()
+                            .frame(height: 80)
+                    } else {
+                        ForEach(locations, id: \.self) { location in
+                            VStack(alignment: .leading) {
+                                Text("Lat:  \(location.coordinate.latitude, specifier: "%2.8f")")
+                                Text("Lon:  \(location.coordinate.longitude, specifier: "%2.8f")")
+                            }.padding(.all, 0)
+                        }
+
+                    }
+                    Spacer()
+
+                }.frame(height: 100).border(.debug)
+                    .padding(.top, 24)
+                Spacer()
                 HStack {
                     Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
                     Spacer()
                 }
                 ProgressView(
                     value: simulationProgress, total: 1.0)
-                
-                Divider()
-                
+               
                 Text("Simulation mode")
                     .font(.headline)
                     .padding(.top, 24)
@@ -53,11 +77,13 @@ struct ContentView: View {
                     Spacer()
                     Button {
                         locationsSimulator.reset()
+                        locations = []
                     } label: {
                         Text("Stop")
                     }
                 }.padding()
                     .padding(.top, 24)
+                Spacer()
                 
             }
             .frame(maxHeight: .infinity)
@@ -87,7 +113,10 @@ struct ContentView: View {
             .onReceive(locationsSimulator.progressPublisher) { progress in
                 simulationProgress = progress
             }
-            .navigationTitle("Combine publishers")
+            .onReceive(locationsSimulator.locationsPublisher) { locs in
+                locations = locs
+            }
+            .navigationTitle("Simulation")
         }
     }
 }
@@ -101,8 +130,8 @@ extension ShapeStyle where Self == Color {
         )
     }
 }
-struct ContentView_Previews: PreviewProvider {
+struct CombineView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        CombineView()
     }
 }
