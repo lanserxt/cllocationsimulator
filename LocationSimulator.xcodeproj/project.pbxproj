@@ -13,7 +13,10 @@
 		9051DFED2A9C6ED8004D4AB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9051DFEC2A9C6ED8004D4AB6 /* Preview Assets.xcassets */; };
 		9051DFF42A9C6F9E004D4AB6 /* LocationFileParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */; };
 		9051DFF62A9C70BE004D4AB6 /* gps.data in Resources */ = {isa = PBXBuildFile; fileRef = 9051DFF52A9C70BE004D4AB6 /* gps.data */; };
-		9051DFF82A9C7103004D4AB6 /* CLLocationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFF72A9C7103004D4AB6 /* CLLocationSimulator.swift */; };
+		9051DFF82A9C7103004D4AB6 /* CLLocationCombineSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFF72A9C7103004D4AB6 /* CLLocationCombineSimulator.swift */; };
+		90D5953E2AAAF6E500B0CECE /* CLLocationBaseSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D5953D2AAAF6E500B0CECE /* CLLocationBaseSimulator.swift */; };
+		90D595402AAB020E00B0CECE /* CLLocationPublisherSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D5953F2AAB020E00B0CECE /* CLLocationPublisherSimulator.swift */; };
+		90D595422AAB0D5F00B0CECE /* PublishersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D595412AAB0D5F00B0CECE /* PublishersView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +27,10 @@
 		9051DFEC2A9C6ED8004D4AB6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFileParser.swift; sourceTree = "<group>"; };
 		9051DFF52A9C70BE004D4AB6 /* gps.data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gps.data; sourceTree = "<group>"; };
-		9051DFF72A9C7103004D4AB6 /* CLLocationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationSimulator.swift; sourceTree = "<group>"; };
+		9051DFF72A9C7103004D4AB6 /* CLLocationCombineSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCombineSimulator.swift; sourceTree = "<group>"; };
+		90D5953D2AAAF6E500B0CECE /* CLLocationBaseSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationBaseSimulator.swift; sourceTree = "<group>"; };
+		90D5953F2AAB020E00B0CECE /* CLLocationPublisherSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationPublisherSimulator.swift; sourceTree = "<group>"; };
+		90D595412AAB0D5F00B0CECE /* PublishersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishersView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,8 +65,11 @@
 			children = (
 				9051DFE52A9C6ED7004D4AB6 /* LocationSimulatorApp.swift */,
 				9051DFE72A9C6ED7004D4AB6 /* CombineView.swift */,
+				90D595412AAB0D5F00B0CECE /* PublishersView.swift */,
 				9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */,
-				9051DFF72A9C7103004D4AB6 /* CLLocationSimulator.swift */,
+				9051DFF72A9C7103004D4AB6 /* CLLocationCombineSimulator.swift */,
+				90D5953F2AAB020E00B0CECE /* CLLocationPublisherSimulator.swift */,
+				90D5953D2AAAF6E500B0CECE /* CLLocationBaseSimulator.swift */,
 				9051DFF52A9C70BE004D4AB6 /* gps.data */,
 				9051DFE92A9C6ED8004D4AB6 /* Assets.xcassets */,
 				9051DFEB2A9C6ED8004D4AB6 /* Preview Content */,
@@ -147,8 +156,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9051DFF82A9C7103004D4AB6 /* CLLocationSimulator.swift in Sources */,
+				9051DFF82A9C7103004D4AB6 /* CLLocationCombineSimulator.swift in Sources */,
+				90D595402AAB020E00B0CECE /* CLLocationPublisherSimulator.swift in Sources */,
 				9051DFE82A9C6ED7004D4AB6 /* CombineView.swift in Sources */,
+				90D595422AAB0D5F00B0CECE /* PublishersView.swift in Sources */,
+				90D5953E2AAAF6E500B0CECE /* CLLocationBaseSimulator.swift in Sources */,
 				9051DFE62A9C6ED7004D4AB6 /* LocationSimulatorApp.swift in Sources */,
 				9051DFF42A9C6F9E004D4AB6 /* LocationFileParser.swift in Sources */,
 			);

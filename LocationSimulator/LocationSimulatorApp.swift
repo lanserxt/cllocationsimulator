@@ -16,6 +16,10 @@ struct LocationSimulatorApp: App {
                     .tabItem {
                         Label("Combine", systemImage: "location.fill")
                     }
+                PublishersView()
+                    .tabItem {
+                        Label("Publisher", systemImage: "location.circle")
+                    }
             }
         }
     }

@@ -1,35 +1,27 @@
 //
-//  CombineView.swift
+//  PublishersView.swift
 //  LocationSimulator
 //
-//  Created by Anton Gubarenko on 28.08.2023.
+//  Created by Anton Gubarenko on 08.09.2023.
 //
 
 import SwiftUI
 import Combine
 import CoreLocation
 
-struct CombineView: View {
+struct PublishersView: View {
     
     @State
     private var emitMode = 0
     
-    @State
-    private var simulationProgress: Double = 0.0
-    
-    @State
-    private var locations: [CLLocation] = []
-    
-    @State
-    private var isActive = false
-    
-    private let locationsSimulator: CLLocationCombineSimulator
+    @ObservedObject
+    private var locationsSimulator: CLLocationPublisherSimulator
     
     init() {
         let locationsParser = LocationFileParser()
         let parsedLocations: [LocationData] = (locationsParser.parseJSONFromFile(named: "gps") ?? [])
         
-        locationsSimulator = CLLocationCombineSimulator(locations: parsedLocations.compactMap({$0.location}))
+        locationsSimulator = CLLocationPublisherSimulator(locations: parsedLocations.compactMap({$0.location}))
     }
     
     var cancellables = Set<AnyCancellable>()
@@ -42,11 +34,11 @@ struct CombineView: View {
                     Image(systemName: "globe")
                     .resizable()
                         .frame(width: 32, height: 32)
-                    if locations.isEmpty {
+                    if locationsSimulator.locations.isEmpty {
                         EmptyView()
                             .frame(height: 80)
                     } else {
-                        ForEach(locations, id: \.self) { location in
+                        ForEach(locationsSimulator.locations, id: \.self) { location in
                             VStack(alignment: .leading) {
                                 Text("Lat:  \(location.coordinate.latitude, specifier: "%2.8f")")
                                 Text("Lon:  \(location.coordinate.longitude, specifier: "%2.8f")")
@@ -60,11 +52,11 @@ struct CombineView: View {
                     .padding(.top, 24)
                 Spacer()
                 HStack {
-                    Text("Progress \(simulationProgress * 100.0, specifier: "%.2f")%")
+                    Text("Progress \(locationsSimulator.progress * 100.0, specifier: "%.2f")%")
                     Spacer()
                 }
                 ProgressView(
-                    value: simulationProgress, total: 1.0)
+                    value: locationsSimulator.progress, total: 1.0)
                
                 Text("Simulation mode")
                     .font(.headline)
@@ -76,16 +68,16 @@ struct CombineView: View {
                 .pickerStyle(.segmented)
                 HStack {
                     Button {
-                        if isActive {
+                        if locationsSimulator.isActive {
                             locationsSimulator.pause()
                         } else {
                             locationsSimulator.start()
                         }
                     } label: {
-                        if isActive {
+                        if locationsSimulator.isActive {
                             Text("Pause")
                         } else {
-                            if locations.isEmpty {
+                            if locationsSimulator.locations.isEmpty {
                                 Text("Start")
                             } else {
                                 Text("Continue")
@@ -96,7 +88,6 @@ struct CombineView: View {
                     Spacer()
                     Button {
                         locationsSimulator.reset()
-                        locations = []
                     } label: {
                         Text("Stop")
                     }
@@ -114,7 +105,7 @@ struct CombineView: View {
                         Text("Active")
                         Circle()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(isActive ? .green : .red)
+                            .foregroundColor(locationsSimulator.isActive ? .green : .red)
                     }
                     Spacer()
                 }
@@ -129,31 +120,13 @@ struct CombineView: View {
                 }
                 locationsSimulator.start()
             }
-            .onReceive(locationsSimulator.progressPublisher) { progress in
-                simulationProgress = progress
-            }
-            .onReceive(locationsSimulator.locationsPublisher) { locs in
-                locations = locs
-            }
-            .onReceive(locationsSimulator.isActivePublisher, perform: { newVal in
-                isActive = newVal
-            })
-            .navigationTitle("Combine listener")
+            .navigationTitle("Publisher")
         }
     }
 }
 
-extension ShapeStyle where Self == Color {
-    static var debug: Color {
-        Color(
-            red: .random(in: 0...1),
-            green: .random(in: 0...1),
-            blue: .random(in: 0...1)
-        )
-    }
-}
-struct CombineView_Previews: PreviewProvider {
+struct PublishersView_Previews: PreviewProvider {
     static var previews: some View {
-        CombineView()
+        PublishersView()
     }
 }

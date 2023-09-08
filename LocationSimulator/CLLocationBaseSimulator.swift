@@ -1,12 +1,11 @@
 //
-//  CLLocationSimulator.swift
+//  CLLocationBaseSimulator.swift
 //  LocationSimulator
 //
-//  Created by Anton Gubarenko on 28.08.2023.
+//  Created by Anton Gubarenko on 08.09.2023.
 //
 
 import Foundation
-import Combine
 import MapKit
 
 /// Modes of locations emit
@@ -16,32 +15,19 @@ enum CLLocationSimulatorMode {
     case emitOnTimestamp
 }
 
-final class CLLocationSimulator: ObservableObject {
+class CLLocationBaseSimulator {
     
-    //Publishers
+    //Methods to update values
+
+    func activeStateChanged(value: Bool) {}
     
-    /// Publisher for Locations update
-    var locationsPublisher: AnyPublisher<[CLLocation], Never> {
-        locations.share().eraseToAnyPublisher()
-    }
+    func progressChanged(value: Double) {}
     
-    /// Publisher for Progress update
-    var progressPublisher: AnyPublisher<Double, Never> {
-        progress.share().eraseToAnyPublisher()
-    }
-    
-    /// Actual locations Publisher
-    private var locations: PassthroughSubject<[CLLocation], Never> = .init()
-    
-    /// Actual progress Publisher
-    private var progress: PassthroughSubject<Double, Never> = .init()
-    
-    @Published
-    var isActive: Bool = false
+    func locationsChanged(value: [CLLocation]) {}
     
     //Inner variables
-    private var locationsUsed: [LocationData] = []
-    private var locationsLeft: [LocationData] = []
+    private var locationsUsed: [CLLocation] = []
+    private var locationsLeft: [CLLocation] = []
     
     /// Base timer to send values
     private var emitTimer: Timer?
@@ -49,15 +35,9 @@ final class CLLocationSimulator: ObservableObject {
     private var totalLocations: Int = 0
     
     /// Constructor
-    /// - Parameter locations: lo
-    init(locations: [LocationData]) {
+    /// - Parameter locations: CLLocations array
+    init(locations: [CLLocation]) {
         locationsLeft = locations
-        totalLocations = locationsLeft.count
-    }
-    
-    init(gpsDataName: String) {
-        let locationsParser = LocationFileParser()
-        locationsLeft = locationsParser.parseJSONFromFile(named: gpsDataName) ?? []
         totalLocations = locationsLeft.count
     }
     
@@ -79,13 +59,13 @@ final class CLLocationSimulator: ObservableObject {
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {[weak self] timer in
             guard let self else {return}
             if let firstLocation = self.locationsLeft.first {
-                locations.send([firstLocation.location])
+                locationsChanged(value: [firstLocation])
             }
         }
         timer.tolerance = 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
-        isActive = true
+        activeStateChanged(value: true)
     }
     
     /// Starting simulation based on mode
@@ -104,12 +84,12 @@ final class CLLocationSimulator: ObservableObject {
     func pause() {
         emitTimer?.invalidate()
         emitTimer = nil
-        isActive = false
+        activeStateChanged(value: false)
     }
     
     /// Reseting used locations and progress
     func reset() {
-        progress.send(0.0)
+        progressChanged(value: 0.0)
         
         var restoredArray = Array(locationsUsed)
         restoredArray.append(contentsOf: locationsLeft)
@@ -118,7 +98,10 @@ final class CLLocationSimulator: ObservableObject {
         
         emitTimer?.invalidate()
         emitTimer = nil
-        isActive = false
+        
+        progressChanged(value: 0.0)
+        activeStateChanged(value: false)
+        locationsChanged(value: [])
     }
     
     /// Emitting locations based on interval
@@ -130,7 +113,7 @@ final class CLLocationSimulator: ObservableObject {
         
         guard !self.locationsLeft.isEmpty else {
             return
-        }        
+        }
         
         //Startign the timer based on set interval
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) {[weak self] timer in
@@ -138,24 +121,25 @@ final class CLLocationSimulator: ObservableObject {
             
             let newLocation = locationsLeft.removeFirst()
             self.locationsUsed.append(newLocation)
-            locations.send([newLocation.location])
-            progress.send(Double(locationsUsed.count) / Double(totalLocations))
+            locationsChanged(value: [newLocation])
+            progressChanged(value: Double(locationsUsed.count) / Double(totalLocations))
             guard !self.locationsLeft.isEmpty else {
                 emitTimer?.invalidate()
                 emitTimer = nil
-                progress.send(1.0)
-                isActive = false
+                progressChanged(value: 1.0)
+                activeStateChanged(value: false)
                 return
             }
         }
         timer.tolerance = interval / 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
-        isActive = true
+        timer.fire()
+        activeStateChanged(value: true)
     }
     
     /// Timestamp that increases during timer ticks
-    private var lastTimestamp: Double = 0.0
+    private var lastTimestamp: Date = Date(timeIntervalSince1970: 0)
     
     /// Timer interval for timestamp emits
     private let timestampInterval: Double = 0.3
@@ -171,7 +155,7 @@ final class CLLocationSimulator: ObservableObject {
         }
         
         //First point timestamp to sum on block
-        lastTimestamp = (locationsLeft.first?.t ?? 0.0)
+        lastTimestamp = (locationsLeft.first?.timestamp ?? Date())
         let timer = Timer.scheduledTimer(withTimeInterval: timestampInterval, repeats: true) {[weak self] timer in
             guard let self else {return}
             
@@ -180,26 +164,26 @@ final class CLLocationSimulator: ObservableObject {
             
             let newLocation = locationsLeft.first
             //Only locaton with timestamp that passed current timestamp
-            guard newLocation?.t ?? 0.0 < lastTimestamp, let newLocation else {
+            guard newLocation?.timestamp ?? Date() < lastTimestamp, let newLocation else {
                 return
             }
             locationsLeft.remove(at: 0)
             self.locationsUsed.append(newLocation)
             
-            locations.send([newLocation.location])
-            progress.send(Double(locationsUsed.count) / Double(totalLocations))
+            locationsChanged(value: [newLocation])
+            progressChanged(value: Double(locationsUsed.count) / Double(totalLocations))
             
             guard !self.locationsLeft.isEmpty else {
                 emitTimer?.invalidate()
                 emitTimer = nil
-                progress.send(1.0)
-                isActive = false
+                progressChanged(value: 1.0)
+                activeStateChanged(value: false)
                 return
             }
         }
         timer.tolerance = timestampInterval / 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
-        isActive = true
+        activeStateChanged(value: true)
     }
 }
