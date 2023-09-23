@@ -20,6 +20,12 @@ struct LocationSimulatorApp: App {
                     .tabItem {
                         Label("Publisher", systemImage: "location.circle")
                     }
+                if #available(iOS 17, *) {
+                    ObservableView()
+                        .tabItem {
+                            Label("Observable", systemImage: "location.circle")
+                        }
+                }
             }
         }
     }

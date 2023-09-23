@@ -9,24 +9,22 @@ import Foundation
 import Combine
 import MapKit
 
-
-
-final class CLLocationCombineSimulator: CLLocationBaseSimulator {
+public final class CLLocationCombineSimulator: CLLocationBaseSimulator {
     
     //Publishers
     
     /// Publisher for Locations update
-    var locationsPublisher: AnyPublisher<[CLLocation], Never> {
+    public var locationsPublisher: AnyPublisher<[CLLocation], Never> {
         locations.share().eraseToAnyPublisher()
     }
     
     /// Publisher for Progress update
-    var progressPublisher: AnyPublisher<Double, Never> {
+    public var progressPublisher: AnyPublisher<Double, Never> {
         progress.share().eraseToAnyPublisher()
     }
     
     /// Publisher for Progress update
-    var isActivePublisher: AnyPublisher<Bool, Never> {
+    public var isActivePublisher: AnyPublisher<Bool, Never> {
         isActive.share().eraseToAnyPublisher()
     }
     

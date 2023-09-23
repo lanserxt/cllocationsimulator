@@ -9,13 +9,13 @@ import Foundation
 import MapKit
 
 /// Modes of locations emit
-enum CLLocationSimulatorMode {
+public enum CLLocationSimulatorMode {
     case emitEveryInterval(time: TimeInterval)
     
     case emitOnTimestamp
 }
 
-class CLLocationBaseSimulator {
+public class CLLocationBaseSimulator {
     
     //Methods to update values
 
@@ -36,18 +36,18 @@ class CLLocationBaseSimulator {
     
     /// Constructor
     /// - Parameter locations: CLLocations array
-    init(locations: [CLLocation]) {
+    public init(locations: [CLLocation]) {
         locationsLeft = locations
         totalLocations = locationsLeft.count
     }
     
     /// Mode to emit values
-    var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 1.0)
+    public var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 1.0)
     
     //MARK: - Timer starters
     
     /// Start sending first location from list as initial coordinate
-    func initialLocationEmit() {
+    public func initialLocationEmit() {
         
         guard !self.locationsLeft.isEmpty else {return}
         
@@ -69,7 +69,7 @@ class CLLocationBaseSimulator {
     }
     
     /// Starting simulation based on mode
-    func start() {
+    public func start() {
         switch simulationMode {
         case .emitEveryInterval(time: let interval):
             emitOnInterval(interval: interval)
@@ -81,14 +81,14 @@ class CLLocationBaseSimulator {
     }
     
     /// Pause simulation
-    func pause() {
+    public func pause() {
         emitTimer?.invalidate()
         emitTimer = nil
         activeStateChanged(value: false)
     }
     
     /// Reseting used locations and progress
-    func reset() {
+    public func reset() {
         progressChanged(value: 0.0)
         
         var restoredArray = Array(locationsUsed)
