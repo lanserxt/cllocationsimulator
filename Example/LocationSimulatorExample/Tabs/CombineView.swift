@@ -10,10 +10,17 @@ import Combine
 import CoreLocation
 import CLLocationSimulator
 
+enum SimulatorMode: Int {
+
+    case emitOnInterval = 0
+    
+    case emitOnTimestamp
+}
+
 struct CombineView: View {
     
     @State
-    private var emitMode = 0
+    private var emitMode: SimulatorMode = .emitOnInterval
     
     @State
     private var simulationProgress: Double = 0.0
@@ -71,8 +78,8 @@ struct CombineView: View {
                     .font(.headline)
                     .padding(.top, 24)
                 Picker("", selection: $emitMode) {
-                    Text("1 second").tag(0)
-                    Text("on timestamp").tag(1)
+                    Text("1 second").tag(SimulatorMode.emitOnInterval)
+                    Text("on timestamp").tag(SimulatorMode.emitOnTimestamp)
                 }
                 .pickerStyle(.segmented)
                 HStack {
@@ -123,10 +130,10 @@ struct CombineView: View {
             .padding()
             .onChange(of: emitMode) { newValue in
                 locationsSimulator.pause()
-                if newValue == 0 {
-                    locationsSimulator.simulationMode = .emitEveryInterval(time: 1.0)
-                } else {
+                if newValue == .emitOnTimestamp {
                     locationsSimulator.simulationMode = .emitOnTimestamp
+                } else {
+                    locationsSimulator.simulationMode = .emitOnInterval(time: 1.0)
                 }
                 locationsSimulator.start()
             }

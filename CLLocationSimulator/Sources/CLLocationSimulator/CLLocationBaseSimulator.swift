@@ -9,8 +9,9 @@ import Foundation
 import MapKit
 
 /// Modes of locations emit
-public enum CLLocationSimulatorMode {
-    case emitEveryInterval(time: TimeInterval)
+public enum CLLocationSimulatorMode: Equatable, Hashable {
+
+    case emitOnInterval(time: TimeInterval)
     
     case emitOnTimestamp
 }
@@ -42,7 +43,7 @@ public class CLLocationBaseSimulator {
     }
     
     /// Mode to emit values
-    public var simulationMode: CLLocationSimulatorMode = .emitEveryInterval(time: 1.0)
+    public var simulationMode: CLLocationSimulatorMode = .emitOnInterval(time: 1.0)
     
     //MARK: - Timer starters
     
@@ -71,7 +72,7 @@ public class CLLocationBaseSimulator {
     /// Starting simulation based on mode
     public func start() {
         switch simulationMode {
-        case .emitEveryInterval(time: let interval):
+        case .emitOnInterval(time: let interval):
             emitOnInterval(interval: interval)
             break
         case .emitOnTimestamp:

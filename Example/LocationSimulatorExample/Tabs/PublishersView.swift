@@ -13,7 +13,7 @@ import CLLocationSimulator
 struct PublishersView: View {
     
     @State
-    private var emitMode = 0
+    private var emitMode: SimulatorMode = .emitOnInterval
     
     @ObservedObject
     private var locationsSimulator: CLLocationPublisherSimulator
@@ -61,8 +61,8 @@ struct PublishersView: View {
                     .font(.headline)
                     .padding(.top, 24)
                 Picker("", selection: $emitMode) {
-                    Text("1 second").tag(0)
-                    Text("on timestamp").tag(1)
+                    Text("1 second").tag(SimulatorMode.emitOnInterval)
+                    Text("on timestamp").tag(SimulatorMode.emitOnTimestamp)
                 }
                 .pickerStyle(.segmented)
                 HStack {
@@ -112,10 +112,10 @@ struct PublishersView: View {
             .padding()
             .onChange(of: emitMode) { newValue in
                 locationsSimulator.pause()
-                if newValue == 0 {
-                    locationsSimulator.simulationMode = .emitEveryInterval(time: 1.0)
-                } else {
+                if newValue == .emitOnTimestamp {
                     locationsSimulator.simulationMode = .emitOnTimestamp
+                } else {
+                    locationsSimulator.simulationMode = .emitOnInterval(time: 1.0)
                 }
                 locationsSimulator.start()
             }
