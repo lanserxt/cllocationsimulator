@@ -16,6 +16,9 @@ struct ObservableView: View {
     @State
     private var emitMode: SimulatorMode = .emitOnInterval
     
+    @State
+    private var locations: [CLLocation] = []
+    
     @ObservedObject
     private var locationsSimulator: CLLocationPublisherSimulator
     
@@ -31,25 +34,22 @@ struct ObservableView: View {
             VStack {
                 
                 VStack {
-                    Image(systemName: "globe")
-                    .resizable()
-                        .frame(width: 32, height: 32)
-                    if locationsSimulator.locations.isEmpty {
-                        EmptyView()
-                            .frame(height: 80)
-                    } else {
-                        ForEach(locationsSimulator.locations, id: \.self) { location in
-                            VStack(alignment: .leading) {
-                                Text("Lat:  \(location.coordinate.latitude, specifier: "%2.8f")")
-                                Text("Lon:  \(location.coordinate.longitude, specifier: "%2.8f")")
-                            }.padding(.all, 0)
+                    Map {
+                        if let currentLocation = locations.last {
+                            Marker("", coordinate: currentLocation.coordinate)
+                                .tint(.orange)
                         }
-
+                        if !locations.isEmpty {
+                            MapPolyline(coordinates: locations.compactMap({$0.coordinate}), contourStyle: .straight)
+                                .stroke(Color.blue, lineWidth: 4)
+                        }
+                        
                     }
-                    Spacer()
-
-                }.frame(height: 100)
-                    .padding(.top, 24)
+                    .mapControlVisibility(.hidden)
+                    
+                }
+                .padding(.top, 24)
+                
                 Spacer()
                 HStack {
                     Text("Progress \(locationsSimulator.progress * 100.0, specifier: "%.2f")%")
@@ -57,7 +57,7 @@ struct ObservableView: View {
                 }
                 ProgressView(
                     value: locationsSimulator.progress, total: 1.0)
-               
+                
                 Text("Simulation mode")
                     .font(.headline)
                     .padding(.top, 24)
@@ -88,6 +88,7 @@ struct ObservableView: View {
                     Spacer()
                     Button {
                         locationsSimulator.reset()
+                        locations.removeAll()
                     } label: {
                         Text("Stop")
                     }
@@ -119,6 +120,9 @@ struct ObservableView: View {
                     locationsSimulator.simulationMode = .emitOnInterval(time: 1.0)
                 }
                 locationsSimulator.start()
+            }
+            .onChange(of: locationsSimulator.locations) { newLocations in
+                locations.append(contentsOf: newLocations)
             }
             .navigationTitle("Observable")
         }

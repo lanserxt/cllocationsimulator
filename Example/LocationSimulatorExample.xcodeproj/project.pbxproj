@@ -15,6 +15,7 @@
 		9051DFED2A9C6ED8004D4AB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9051DFEC2A9C6ED8004D4AB6 /* Preview Assets.xcassets */; };
 		9051DFF42A9C6F9E004D4AB6 /* LocationFileParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051DFF32A9C6F9E004D4AB6 /* LocationFileParser.swift */; };
 		9051DFF62A9C70BE004D4AB6 /* gps.data in Resources */ = {isa = PBXBuildFile; fileRef = 9051DFF52A9C70BE004D4AB6 /* gps.data */; };
+		90CB126C2AC22B7D00C05106 /* CLLocationSimulator in Frameworks */ = {isa = PBXBuildFile; productRef = 90CB126B2AC22B7D00C05106 /* CLLocationSimulator */; };
 		90D595422AAB0D5F00B0CECE /* PublishersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D595412AAB0D5F00B0CECE /* PublishersView.swift */; };
 		90DB687A2ABF0D9800F146A6 /* CLLocationSimulator in Frameworks */ = {isa = PBXBuildFile; productRef = 90DB68792ABF0D9800F146A6 /* CLLocationSimulator */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 			files = (
 				90DB687A2ABF0D9800F146A6 /* CLLocationSimulator in Frameworks */,
 				9038BF0F2ABF1424003149CC /* CLLocationSimulator in Frameworks */,
+				90CB126C2AC22B7D00C05106 /* CLLocationSimulator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +120,7 @@
 			packageProductDependencies = (
 				90DB68792ABF0D9800F146A6 /* CLLocationSimulator */,
 				9038BF0E2ABF1424003149CC /* CLLocationSimulator */,
+				90CB126B2AC22B7D00C05106 /* CLLocationSimulator */,
 			);
 			productName = LocationSimulator;
 			productReference = 9051DFE22A9C6ED7004D4AB6 /* LocationSimulatorExample.app */;
@@ -148,7 +151,7 @@
 			);
 			mainGroup = 9051DFD92A9C6ED7004D4AB6;
 			packageReferences = (
-				9038BF0D2ABF1424003149CC /* XCLocalSwiftPackageReference "../CLLocationSimulator" */,
+				90CB126A2AC22B7D00C05106 /* XCLocalSwiftPackageReference ".." */,
 			);
 			productRefGroup = 9051DFE32A9C6ED7004D4AB6 /* Products */;
 			projectDirPath = "";
@@ -384,14 +387,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		9038BF0D2ABF1424003149CC /* XCLocalSwiftPackageReference "../CLLocationSimulator" */ = {
+		90CB126A2AC22B7D00C05106 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../CLLocationSimulator;
+			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		9038BF0E2ABF1424003149CC /* CLLocationSimulator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CLLocationSimulator;
+		};
+		90CB126B2AC22B7D00C05106 /* CLLocationSimulator */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CLLocationSimulator;
 		};
