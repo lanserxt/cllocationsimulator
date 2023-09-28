@@ -1,17 +1,17 @@
-# cllocationsimulator
+# CLLocationSimulator SPM 📦
 
 [![Swift Version](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com)
 
-**cllocationsimulator** is a Swift package that provides a convenient interface for simulating `CLLocation` objects. It allows you to simulate location data for iOS, macOS, tvOS, and watchOS applications during development and testing. This can be incredibly useful when you need to test location-based features in your app without physically moving to different locations.
+**cllocationsimulator** is a Swift package that provides a convenient interface for simulating `CLLocation` objects📍. It allows you to simulate location data for iOS, macOS, tvOS, and watchOS applications during development and testing. This can be incredibly useful when you need to test location-based features in your app without physically moving to different locations.
 
 ## Features
 
-- Simulate `CLLocation` objects with custom coordinates, altitude, course, speed, and more.
-- Define routes with a sequence of locations for realistic movement simulation.
-- Set up geofences and test how your app responds to location-based triggers.
-- Easily switch between simulated and real location data during development.
+- Simulate `CLLocation` objects with custom coordinates, altitude, course, speed, and more 🌎
+- Define routes with a sequence of locations for realistic movement simulation 🚏
+- Easily switch between simulated and real location data during development
+- Supports 2️⃣ modes for simulation: based on selected interval or original location timestamp
 
 ## Requirements
 
@@ -32,71 +32,119 @@ To integrate `cllocationsimulator` into your Xcode project using Swift Package M
 
 ### Manual
 
-You can also manually add `cllocationsimulator` to your project:
+You can also manually add `CLLocationSimulator` to your project:
 
 1. Clone or download the repository.
-2. Drag the `cllocationsimulator` directory into your Xcode project.
+2. Drag the `CLLocationSimulator` directory into your Xcode project.
 
 ## Usage
 
-1. Import the `cllocationsimulator` module in your Swift file:
+1. Import the `CLLocationSimulator` module in your Swift file:
 
    ```swift
-   import cllocationsimulator
+   import CLLocationSimulator
    ```
 
 2. Create an instance of `LocationSimulator`:
 
    ```swift
-   let locationSimulator = LocationSimulator()
+   let locationsToSimulate: [CLLocation] = []
+   let locationSimulator = CLLocationBaseSimulator(locations: locationsToSimulate)
    ```
 
-3. Simulate a single location:
+   In [Example](Example/LocationSimulatorExample/FileParser/) you can check how to parse JSON GPS data to CLLocation and pass it to location simulator constructor
+
+3. Track changes of needed parameters:
 
    ```swift
-   let coordinate = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-   let location = CLLocation(coordinate: coordinate, altitude: 0, horizontalAccuracy: 5, verticalAccuracy: 5, course: 0, speed: 0, timestamp: Date())
-   locationSimulator.simulateLocation(location)
+   /// Change of simulation status
+   /// - Parameter value: is active
+   func activeStateChanged(value: Bool) {}
+    
+   /// Change of progress of simulation
+   /// - Parameter value: new progress
+   func progressChanged(value: Double) {}
+    
+   /// Change of locations
+   /// - Parameter value: new locations
+   func locationsChanged(value: [CLLocation]) {}
    ```
 
-4. Simulate a route:
+5. You can use CLLocationBaseSimulator as a raw locations provider but there are 3 common implementation which you already can use. They are also available in SPM.
+   
+### CLLocationCombineSimulator
 
-   ```swift
-   let route = [
-       CLLocation(latitude: 37.7749, longitude: -122.4194),
-       CLLocation(latitude: 34.0522, longitude: -118.2437),
-       // Add more locations to the route
-   ]
-   locationSimulator.simulateRoute(route, timeInterval: 5.0)
+Combine implementation to track only needed properties. If redrawing performance in SwiftUI, in example, is critical.
+
+```swift
+/// Publisher for Locations update
+public var locationsPublisher: AnyPublisher<[CLLocation], Never>
+    
+/// Publisher for Progress update
+public var progressPublisher: AnyPublisher<Double, Never>
+
+/// Publisher for Status update
+public var isActivePublisher: AnyPublisher<Bool, Never>
+```
+
+### CLLocationPublisherSimulator
+
+Combine implementation also but change of any property triggers whole view update for SwiftUI. If performance is not so critical.
+
+```swift
+/// Publisher for Locations update
+public var locationsPublisher: AnyPublisher<[CLLocation], Never>
+    
+/// Publisher for Progress update
+public var progressPublisher: AnyPublisher<Double, Never>
+
+/// Publisher for Status update
+public var isActivePublisher: AnyPublisher<Bool, Never>
    ```
 
-5. Simulate geofence triggers:
+### CLLocationObservableSimulator
 
-   ```swift
-   let geofence = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), radius: 100, identifier: "Geofence")
-   locationSimulator.addGeofence(geofence)
+New SwiftUI implementation for iOS 17. Same syntax-sugar as ObservableObject but changes of only tracked properties are causing the redraw. [More info here](https://developer.apple.com/documentation/observation).
 
-   // Listen for geofence triggers
-   NotificationCenter.default.addObserver(self, selector: #selector(geofenceTriggered(_:)), name: .CLLSGeofenceTriggered, object: nil)
+```swift
+@Observable
+public final class CLLocationObservableSimulator: CLLocationBaseSimulator {
+    
+/// Actual locations Publisher
+public var locations: [CLLocation] = []
+    
+/// Actual progress Publisher
+public var progress: Double = 0.0
+    
+/// Actual active status Publisher
+public var isActive: Bool = false
+```
 
-   @objc func geofenceTriggered(_ notification: Notification) {
-       if let region = notification.object as? CLRegion {
-           print("Geofence triggered: \(region.identifier)")
-       }
-   }
-   ```
+5. Start initial location emit. First point of locations passed to constructor will be sent.
 
-6. Switch between real and simulated locations:
+```swift
+   locationSimulator.initialLocationEmit()
+```
 
-   ```swift
-   // Enable simulated locations
-   locationSimulator.enable()
+6. Switch between modes. By default, emit on interval is set.
 
-   // Disable simulated locations and revert to real location updates
-   locationSimulator.disable()
-   ```
+```swift
+locationSimulator.simulationMode = .emitOnInterval(1.0)
+//or
+locationSimulator.simulationMode = .emitOnTimestamp
+```
 
-For more detailed usage instructions and examples, please refer to the documentation or examples provided in the repository.
+7. To control simuation you can use plain interface.
+
+```swift
+func start()
+
+func pause()
+
+func reset()
+```
+
+For more detailed usage instructions and examples, please refer to the  [Example](Example/LocationSimulatorExample) provided in the repository.
 
 ## License
 
@@ -111,5 +159,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you have any questions or suggestions, please feel free to [open an issue](https://github.com/yourusername/cllocationsimulator/issues) on GitHub.
 
 ---
-
-**Note:** Replace `yourusername` with your GitHub username in the package URL and update the content of this README as needed to provide accurate and up-to-date information about your Swift package, including the installation process, usage instructions, and any additional features or details specific to your package.
