@@ -19,11 +19,17 @@ public enum CLLocationSimulatorMode: Equatable, Hashable {
 public class CLLocationBaseSimulator {
     
     //Methods to update values
-
+    
+    /// Change of simulation status
+    /// - Parameter value: is active
     func activeStateChanged(value: Bool) {}
     
+    /// Change of progress of simulation
+    /// - Parameter value: new progress
     func progressChanged(value: Double) {}
     
+    /// Change of locations
+    /// - Parameter value: new locations
     func locationsChanged(value: [CLLocation]) {}
     
     //Inner variables
@@ -42,7 +48,7 @@ public class CLLocationBaseSimulator {
         totalLocations = locationsLeft.count
     }
     
-    /// Mode to emit values
+    /// Mode to emit values. 1 second by default.
     public var simulationMode: CLLocationSimulatorMode = .emitOnInterval(time: 1.0)
     
     //MARK: - Timer starters

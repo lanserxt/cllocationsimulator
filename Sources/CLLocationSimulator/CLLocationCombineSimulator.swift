@@ -23,7 +23,7 @@ public final class CLLocationCombineSimulator: CLLocationBaseSimulator {
         progress.share().eraseToAnyPublisher()
     }
     
-    /// Publisher for Progress update
+    /// Publisher for Status update
     public var isActivePublisher: AnyPublisher<Bool, Never> {
         isActive.share().eraseToAnyPublisher()
     }
