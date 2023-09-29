@@ -123,7 +123,7 @@ public var isActive: Bool = false
 5. Start initial location emit. First point of locations passed to constructor will be sent.
 
 ```swift
-   locationSimulator.initialLocationEmit()
+locationSimulator.initialLocationEmit()
 ```
 
 6. Switch between modes. By default, emit on interval is set.
@@ -145,6 +145,12 @@ func reset()
 ```
 
 For more detailed usage instructions and examples, please refer to the  [Example](Example/LocationSimulatorExample) provided in the repository.
+
+## Example App
+
+Simple SwiftUI app to track progress and changes + for iOS 17 new Map features (pin, path, scale)
+
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg) ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg) ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg)
 
 ## License
 
