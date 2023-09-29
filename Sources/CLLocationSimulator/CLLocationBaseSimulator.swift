@@ -66,7 +66,7 @@ public class CLLocationBaseSimulator {
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {[weak self] timer in
             guard let self else {return}
             if let firstLocation = self.locationsLeft.first {
-                locationsChanged(value: [firstLocation])
+                locationsChanged(value: [firstLocation.withTimestamp(Date())])
             }
         }
         timer.tolerance = 0.5
@@ -192,5 +192,33 @@ public class CLLocationBaseSimulator {
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
         activeStateChanged(value: true)
+    }
+}
+
+extension CLLocation {
+    
+    /// Creates a new CLLocation with changed timestamp
+    /// - Parameter timestamp: timestamp to set
+    /// - Returns: CLLocation with new timestamp
+    public func withTimestamp(_ timestamp: Date) -> CLLocation {
+        if #available(iOS 13.4, *) {
+            return CLLocation(coordinate: coordinate,
+                       altitude: altitude,
+                       horizontalAccuracy: horizontalAccuracy,
+                       verticalAccuracy: verticalAccuracy,
+                       course: course,
+                       courseAccuracy: courseAccuracy,
+                       speed: speed,
+                       speedAccuracy: speedAccuracy,
+                       timestamp: timestamp)
+        } else {
+            return CLLocation(coordinate: coordinate,
+                       altitude: altitude,
+                       horizontalAccuracy: horizontalAccuracy,
+                       verticalAccuracy: verticalAccuracy,
+                       course: course,
+                       speed: speed,
+                       timestamp: timestamp)
+        }
     }
 }
