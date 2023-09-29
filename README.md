@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com)
 
-**cllocationsimulator** is a Swift package that provides a convenient interface for simulating `CLLocation` objects📍. It allows you to simulate location data for iOS, macOS, tvOS, and watchOS applications during development and testing. This can be incredibly useful when you need to test location-based features in your app without physically moving to different locations.
+**cllocationsimulator** is a Swift package that provides a convenient interface for simulating `CLLocation` objects. It allows you to simulate location data for iOS, macOS, tvOS, and watchOS applications during development and testing. This can be incredibly useful when you need to test location-based features in your app without physically moving to different locations.
 
 ## Features
 
@@ -22,7 +22,7 @@
 
 ### Swift Package Manager
 
-To integrate `cllocationsimulator` into your Xcode project using Swift Package Manager, follow these steps:
+To integrate `CLLocationSimulator` into your Xcode project using Swift Package Manager, follow these steps:
 
 1. Open your project in Xcode.
 2. Go to "File" > "Swift Packages" > "Add Package Dependency..."
@@ -150,7 +150,7 @@ For more detailed usage instructions and examples, please refer to the  [Example
 
 Simple SwiftUI app to track progress and changes + for iOS 17 new Map features (pin, path, scale)
 
-![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg) ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg) ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg)
+<img src="/Images/Combine.png" alt="Combine App" width="200"/> <img src="/Images/Publisher.png" alt="Publisher App" width="200"/> <img src="/Images/Observed.png" alt="Observed App" width="200"/>
 
 ## License
 
@@ -161,6 +161,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by the need for easy location simulation during app development.
 
 ## Contact
+
+<div id="badges">
+  <a href="https://www.linkedin.com/in/antongubarenko">
+    <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+  </a>
+  <a href="https://twitter.com/AntonGubarenko">
+    <img src="https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter Badge"/>
+  </a>
+</div>
 
 If you have any questions or suggestions, please feel free to [open an issue](https://github.com/yourusername/cllocationsimulator/issues) on GitHub.
 
