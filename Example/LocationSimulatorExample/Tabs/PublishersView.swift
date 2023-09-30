@@ -25,6 +25,12 @@ struct PublishersView: View {
         locationsSimulator = CLLocationPublisherSimulator(locations: parsedLocations.compactMap({$0.location}))
     }
     
+    static let stackDateFormat: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd MMM yy HH:mm:ss"
+            return formatter
+        }()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -41,6 +47,7 @@ struct PublishersView: View {
                             VStack(alignment: .leading) {
                                 Text("Lat:  \(location.coordinate.latitude, specifier: "%2.8f")")
                                 Text("Lon:  \(location.coordinate.longitude, specifier: "%2.8f")")
+                                Text(location.timestamp, formatter: Self.stackDateFormat)
                             }.padding(.all, 0)
                         }
 

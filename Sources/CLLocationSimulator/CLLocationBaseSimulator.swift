@@ -72,7 +72,6 @@ public class CLLocationBaseSimulator {
         timer.tolerance = 0.5
         RunLoop.current.add(timer, forMode: .common)
         emitTimer = timer
-        activeStateChanged(value: true)
     }
     
     /// Starting simulation based on mode
@@ -128,7 +127,7 @@ public class CLLocationBaseSimulator {
             
             let newLocation = locationsLeft.removeFirst()
             self.locationsUsed.append(newLocation)
-            locationsChanged(value: [newLocation])
+            locationsChanged(value: [newLocation.withTimestamp(Date())])
             progressChanged(value: Double(locationsUsed.count) / Double(totalLocations))
             guard !self.locationsLeft.isEmpty else {
                 emitTimer?.invalidate()
@@ -170,14 +169,15 @@ public class CLLocationBaseSimulator {
             lastTimestamp += timestampInterval
             
             let newLocation = locationsLeft.first
-            //Only locaton with timestamp that passed current timestamp
-            guard newLocation?.timestamp ?? Date() < lastTimestamp, let newLocation else {
+            //Only locaton with timestamp that passed last timestamp
+            guard (newLocation?.timestamp ?? Date()) < lastTimestamp, let newLocation else {
                 return
             }
             locationsLeft.remove(at: 0)
             self.locationsUsed.append(newLocation)
             
-            locationsChanged(value: [newLocation])
+            //Send new with current date
+            locationsChanged(value: [newLocation.withTimestamp(Date())])
             progressChanged(value: Double(locationsUsed.count) / Double(totalLocations))
             
             guard !self.locationsLeft.isEmpty else {

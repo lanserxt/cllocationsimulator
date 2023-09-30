@@ -36,7 +36,7 @@ struct ObservableView: View {
                 VStack {
                     Map {
                         if let currentLocation = locations.last {
-                            Marker("", coordinate: currentLocation.coordinate)
+                            Marker("", systemImage: "location.circle", coordinate: currentLocation.coordinate)
                                 .tint(.orange)
                         }
                         if !locations.isEmpty {
@@ -123,6 +123,9 @@ struct ObservableView: View {
             }
             .onChange(of: locationsSimulator.locations) { newLocations in
                 locations.append(contentsOf: newLocations)
+            }
+            .onAppear {
+                locationsSimulator.initialLocationEmit()
             }
             .navigationTitle("Observable")
         }
