@@ -92,15 +92,18 @@ public var isActivePublisher: AnyPublisher<Bool, Never>
 Combine implementation also but change of any property triggers whole view update for SwiftUI. If performance is not so critical.
 
 ```swift
-/// Publisher for Locations update
-public var locationsPublisher: AnyPublisher<[CLLocation], Never>
+/// Actual locations Publisher
+@Published
+public var locations: [CLLocation] = []
     
-/// Publisher for Progress update
-public var progressPublisher: AnyPublisher<Double, Never>
-
-/// Publisher for Status update
-public var isActivePublisher: AnyPublisher<Bool, Never>
-   ```
+/// Actual progress Publisher
+@Published
+public var progress: Double = 0.0
+    
+/// Actual active status Publisher
+@Published
+public var isActive: Bool = false
+```
 
 ### CLLocationObservableSimulator
 
