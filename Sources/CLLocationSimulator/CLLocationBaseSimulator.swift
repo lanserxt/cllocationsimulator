@@ -48,6 +48,14 @@ public class CLLocationBaseSimulator {
         totalLocations = locationsLeft.count
     }
     
+    /// Change loaded locations to emit
+    /// - Parameter locations: new locations array
+    func changeLocations(_ locations: [CLLocation]) {
+        locationsLeft = locations
+        totalLocations = locationsLeft.count
+        reset()
+    }
+    
     /// Mode to emit values. 1 second by default.
     public var simulationMode: CLLocationSimulatorMode = .emitOnInterval(time: 1.0)
     
