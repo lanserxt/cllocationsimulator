@@ -69,7 +69,12 @@ You can also manually add `CLLocationSimulator` to your project:
    /// - Parameter value: new locations
    func locationsChanged(value: [CLLocation]) {}
    ```
-
+   
+4. Replace loaded CLLocations with straight method:
+   ```swift
+    func changeLocations(_ locations: [CLLocation])
+   ```
+   
 5. You can use CLLocationBaseSimulator as a raw locations provider but there are 3 common implementation which you already can use. They are also available in SPM.
    
 ### CLLocationCombineSimulator

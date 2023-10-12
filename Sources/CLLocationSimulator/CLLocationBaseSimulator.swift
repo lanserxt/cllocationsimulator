@@ -50,7 +50,7 @@ public class CLLocationBaseSimulator {
     
     /// Change loaded locations to emit
     /// - Parameter locations: new locations array
-    func changeLocations(_ locations: [CLLocation]) {
+    public func changeLocations(_ locations: [CLLocation]) {
         locationsLeft = locations
         totalLocations = locationsLeft.count
         reset()
